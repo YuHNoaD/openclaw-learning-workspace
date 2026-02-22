@@ -3,10 +3,15 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const workspaceRoot = path.resolve(__dirname, '..', '..');
 
 (async () => {
   const url = process.argv[2];
-  const out = process.argv[3] || 'screenshot.png';
+  const out = process.argv[3] || path.join(workspaceRoot, 'screenshots', `screenshot-${Date.now()}.png`);
 
   if (!url) {
     console.error('Usage: node screenshot.js <url> [output.png]');
@@ -23,7 +28,8 @@ import path from 'path';
   const page = await browser.newPage();
   await page.setViewportSize({ width: 1920, height: 1080 });
 
-  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.goto(url, { waitUntil: 'load', timeout: 15000 });
+  await page.waitForTimeout(2000);
 
   // Ensure output directory exists
   const outDir = path.dirname(out);

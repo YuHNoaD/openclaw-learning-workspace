@@ -1,16 +1,16 @@
 # 🦞 OpenClaw Learning Workspace
 
-> **Self-improving AI agent system** với khả năng học từ mỗi task, ghi nhớ lỗi, và tự nâng cấp skill confidence.
+> **Self-improving AI agent system** with the ability to learn from each task, remember failures, and upgrade skill confidence.
 
 ---
 
-## 🎯 Mục tiêu
+## 🎯 Goal
 
-Biến OpenClaw thành một hệ thống AI tự học:
-- ✅ Ghi nhớ lỗi và pattern fix hiệu quả
-- ✅ Nâng confidence cho từng skill
-- ✅ Tự cải thiện prompt và hành vi
-- ✅ Hiểu "gu" của user và áp dụng vào lần sau
+Transform OpenClaw into a self-learning AI system:
+- ✅ Remember errors and effective fix patterns
+- ✅ Raise confidence for each skill
+- ✅ Self-improve prompts and behavior
+- ✅ Understand user preferences and apply them later
 
 ---
 
@@ -24,40 +24,48 @@ Task → Planner → Designer → Coder → Reviewer → Executor → Validator 
 ```
 
 **Flow:**
-1. **Planner** - Phân tích task, check skill history
-2. **Designer** - Hiểu vibe/emotion, tạo design brief
-3. **Coder** - Code theo design brief
+1. **Planner** - Analyze task, check skill history
+2. **Designer** - Understand vibe/emotion, create design brief
+3. **Coder** - Code according to design brief
 4. **Reviewer** - Review code quality
-5. **Executor** - Deploy/execute với self-healing
+5. **Executor** - Deploy/execute with self-healing
 6. **Validator** - Check URL health, verify content
-7. **Learner** - Học từ kết quả, update skills
+7. **Learner** - Learn from results, update skills
 
 ---
 
-## 📁 Cấu trúc thư mục
+## 📁 Directory Structure
 
 ```
 workspace/
 ├── agents/              # Agent definitions
-│   ├── planner.yaml     # Workflow planner - đọc skills.yaml để tránh lỗi cũ
-│   ├── designer.yaml    # Creative UI/UX Director - hiểu vibe, tạo design brief
+│   ├── planner.yaml     # Workflow planner - reads skills.yaml to avoid old failures
+│   ├── designer.yaml    # Creative UI/UX Director - understands vibe, creates design brief
 │   ├── coder.yaml       # Code Generator
 │   ├── reviewer.yaml    # Code Reviewer
 │   ├── executor.yaml    # Tool Executor + Self-Healer
 │   ├── validator.yaml   # Result Validator + URL Health Check
-│   ├── learner.yaml     # Postmortem Analyst - học từ mỗi task
+│   ├── learner.yaml     # Postmortem Analyst - learns from each task
 │   ├── metrics.yaml     # Performance Analyst - weekly KPIs
 │   ├── crawler.yaml     # Web Crawler
 │   └── infra_coder.yaml # Infrastructure Coder
 │
 ├── playbooks/           # Workflow definitions
 │   ├── _common.yaml     # Common settings (retry, self-heal)
-│   ├── webapp_autodeploy.yaml  # Tạo + deploy webapp
-│   ├── bugfix_pr.yaml          # Fix bug + tạo PR
+│   ├── webapp_autodeploy.yaml  # Create + deploy webapp
+│   ├── bugfix_pr.yaml          # Fix bug + create PR
 │   ├── crawl_and_commit.yaml   # Crawl data + commit
 │   └── devops_automation.yaml  # Infra + CI/CD
 │
 ├── tools/               # Tool definitions
+│   ├── browser/         # Playwright automation scripts
+│   │   ├── open.js      # Open URLs
+│   │   ├── screenshot.js # Take screenshots
+│   │   ├── click.js     # Click elements
+│   │   ├── fill.js      # Fill forms
+│   │   ├── crawl.js     # Crawl content
+│   │   └── snapshot.js  # UI analysis
+│   ├── browser.yaml     # Browser tool config
 │   ├── vercel.yaml      # Vercel deploy commands
 │   ├── git.yaml         # Git operations
 │   ├── ci.yaml          # CI trigger
@@ -65,18 +73,82 @@ workspace/
 │   ├── shell.yaml       # Shell commands
 │   └── web.yaml         # Web tools
 │
-├── memory/              # Learning & memory
+├── memory/              # Learning & memory (gitignored)
 │   ├── skills.yaml      # Skill confidence registry
-│   └── 2026-02-22.md    # Daily logs
+│   └── YYYY-MM-DD.md    # Daily logs
 │
-├── projects/            # Generated projects
-│   └── heart-gift/      # Example: Romantic heart webapp
+├── screenshots/         # Generated screenshots (gitignored)
 │
-├── MEMORY.md            # Long-term memory + user preferences
+├── MEMORY.md            # Long-term memory + user preferences (gitignored)
+├── USER.md              # User profile (gitignored)
+├── IDENTITY.md          # Agent identity (gitignored)
 ├── HEARTBEAT.md         # Periodic check tasks
 ├── SOUL.md              # Agent principles
-├── IDENTITY.md          # Agent identity (Eye 👁️)
-└── USER.md              # User profile
+│
+├── Dockerfile           # Docker container definition
+├── docker-compose.yml   # Docker orchestration
+└── .env.example         # Environment template
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1. Clone and Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/YOUR_USERNAME/openclaw-learning-workspace.git
+cd openclaw-learning-workspace
+
+# Copy example files
+cp USER.example.md USER.md
+cp IDENTITY.example.md IDENTITY.md
+cp MEMORY.example.md MEMORY.md
+cp memory/skills.example.yaml memory/skills.yaml
+
+# Edit with your info
+nano USER.md
+nano IDENTITY.md
+```
+
+### 2. Set Environment Variables
+
+```bash
+# Copy env template
+cp .env.example .env
+
+# Edit with your tokens
+nano .env
+```
+
+Required tokens:
+- `GITHUB_TOKEN` - [Get here](https://github.com/settings/tokens)
+- `VERCEL_TOKEN` - [Get here](https://vercel.com/account/tokens)
+
+### 3. Run Locally
+
+```bash
+# Install browser tools
+cd tools/browser
+npm install
+npx playwright install chromium
+
+# Test screenshot
+node screenshot.js https://example.com
+```
+
+### 4. Run with Docker (Recommended)
+
+```bash
+# Build and run
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Execute in container
+docker-compose exec openclaw-godmode bash
 ```
 
 ---
@@ -85,20 +157,20 @@ workspace/
 
 ### Core Agents
 
-| Agent | Role | Mô tả |
-|-------|------|-------|
-| `planner` | Workflow Planner | Phân tích task, check `skills.yaml`, tránh lỗi cũ |
-| `coder` | Code Generator | Generate code theo design brief |
+| Agent | Role | Description |
+|-------|------|-------------|
+| `planner` | Workflow Planner | Analyze task, check `skills.yaml`, avoid old failures |
+| `coder` | Code Generator | Generate code from design brief |
 | `reviewer` | Code Reviewer | Review code quality |
-| `executor` | Tool Executor + Self-Healer | Execute tools, tự sửa khi fail |
+| `executor` | Tool Executor + Self-Healer | Execute tools, self-fix on failure |
 | `validator` | Result Validator | Check URL health, verify content |
-| `learner` | Postmortem Analyst | Học từ mỗi task, update skills |
+| `learner` | Postmortem Analyst | Learn from each task, update skills |
 
 ### Specialized Agents
 
-| Agent | Role | Mô tả |
-|-------|------|-------|
-| `designer` | Creative UI/UX Director | Hiểu vibe/emotion, tạo design brief |
+| Agent | Role | Description |
+|-------|------|-------------|
+| `designer` | Creative UI/UX Director | Understand vibe/emotion, create design brief |
 | `metrics` | Performance Analyst | Weekly KPI tracking |
 | `crawler` | Web Crawler | Crawl data from web |
 | `infra_coder` | Infrastructure Coder | Write infra code |
@@ -108,48 +180,34 @@ workspace/
 ## 📋 Playbooks
 
 ### 1. `webapp_autodeploy`
-**Workflow:**
 ```
 planner → designer → coder → reviewer → executor(vercel) → validator → learner
 ```
-
-**Use case:** Tạo webapp với UI đẹp, tự động deploy
-
-**Features:**
-- Designer hiểu vibe (romantic, cute, dark, minimal)
-- Self-healing khi deploy fail
-- URL health check sau deploy
-- Ghi nhớ preferences cho lần sau
+**Use case:** Create webapp with beautiful UI, auto-deploy
 
 ---
 
 ### 2. `bugfix_pr`
-**Workflow:**
 ```
 planner → coder → reviewer → executor(git.commit) → executor(git.pr) → validator → learner
 ```
-
-**Use case:** Fix bug và tạo PR tự động
+**Use case:** Fix bug and create PR automatically
 
 ---
 
 ### 3. `crawl_and_commit`
-**Workflow:**
 ```
 planner → crawler → reviewer → executor(git.commit) → executor(git.push) → learner
 ```
-
-**Use case:** Crawl data và push lên repo
+**Use case:** Crawl data and push to repo
 
 ---
 
 ### 4. `devops_automation`
-**Workflow:**
 ```
 planner → infra_coder → reviewer → executor(ci.trigger) → validator → learner
 ```
-
-**Use case:** Infrastructure automation và CI/CD
+**Use case:** Infrastructure automation and CI/CD
 
 ---
 
@@ -166,20 +224,13 @@ skills:
     common_failures:         # Known failure patterns
       - wrong_project_link
       - missing_vercel_token
-
-  - name: romantic_ui_design
-    confidence: 0.7
-    last_used: 2026-02-22
-    uses_count: 1
-    common_failures:
-      - animation_performance
 ```
 
-**Cách hoạt động:**
-- Mỗi task → Learner update confidence
+**How it works:**
+- Each task → Learner updates confidence
 - Success: confidence +0.05
 - Fail: confidence -0.1 + add failure pattern
-- Planner đọc để avoid lỗi cũ
+- Planner reads to avoid old failures
 
 ---
 
@@ -189,22 +240,21 @@ skills:
 ## UI/UX Preferences
 - Romantic UI: Smooth animations, hearts
 - Dark mode: Preferred for dashboards
-- Animation style: Subtle to moderate
 
 ## Coding Preferences
 - Clean, readable code
 - Responsive design (mobile-first)
 ```
 
-**Cách hoạt động:**
-- Designer đọc preferences khi tạo design brief
-- Lần sau chỉ cần nói "làm web tỏ tình" → tự chọn style đúng gu
+**How it works:**
+- Designer reads preferences when creating design brief
+- Next time just say "make a love confession web" → auto-select correct style
 
 ---
 
 ## 🛡️ Self-Healing
 
-**Executor với self-healing:**
+**Executor with self-healing:**
 
 ```yaml
 process:
@@ -253,94 +303,36 @@ process:
 
 | Secret | Tool | Purpose |
 |--------|------|---------|
+| `GITHUB_TOKEN` | `tools/git.yaml` | Create repos, push code |
 | `VERCEL_TOKEN` | `tools/vercel.yaml` | Deploy to Vercel |
-| `PROM_URL` | `tools/observability.yaml` | Prometheus metrics |
-| `GRAFANA_URL` | `tools/observability.yaml` | Grafana logs |
+| `OPENAI_API_KEY` | Agents | GPT models (optional) |
+| `ANTHROPIC_API_KEY` | Agents | Claude models (optional) |
 
-**Note:** GitHub và Vercel CLI auth cần đư��c config locally.
-
----
-
-## 🚀 Quick Start
-
-### 1. Import config
-```bash
-# Copy toàn bộ thư mục này vào OpenClaw workspace
-cp -r ./* ~/.openclaw/workspace/
-```
-
-### 2. Set secrets
-```bash
-# Set environment variables
-export VERCEL_TOKEN="your-token"
-export PROM_URL="https://prometheus.example.com"
-export GRAFANA_URL="https://grafana.example.com"
-```
-
-### 3. Run playbook
-```
-# Via OpenClaw chat:
-"làm web trái tim tặng người yêu đi"
-```
+**Note:** All tokens are read from environment variables, never hardcoded.
 
 ---
 
-## 📈 Example: "Web trái tim tặng người yêu"
+## 🛡️ Security Model
 
-**Input:** "làm web trái tim tặng người yêu đi"
+### What's Allowed (Sandboxed)
+- ✅ Internet access (outbound only)
+- ✅ Read/write files in workspace
+- ✅ Execute commands
+- ✅ Browser automation
+- ✅ Git operations
+- ✅ Deploy to Vercel
 
-**Flow:**
-1. `planner` → Choose `webapp_autodeploy`
-2. `designer` → Detect "romantic" vibe
-   ```yaml
-   style: romantic
-   colors:
-     primary: "#ff6b6b"
-   animations:
-     - heartbeat
-     - floating_hearts
-   ```
-3. `coder` → Generate HTML/CSS/JS
-4. `reviewer` → Check code quality
-5. `executor` → `vercel --yes`
-6. `validator` → Check https://heart-gift-flame.vercel.app (HTTP 200 ✓)
-7. `learner` → Update skills:
-   - `romantic_ui_design`: +0.05
-   - `vercel_deploy`: +0.05
+### What's Blocked
+- ❌ `sudo` commands
+- ❌ `rm -rf /`
+- ❌ Access to host system
+- ❌ Privileged Docker mode
+- ❌ Mount host sensitive directories
 
-**Output:** https://heart-gift-flame.vercel.app
-
-**Learned:** User likes romantic UI with smooth animations
-
----
-
-## 🎓 Lessons Learned
-
-*(Tự động populate bởi learner agent)*
-
-| Date | Task | Lesson | Skill Updated |
-|------|------|--------|---------------|
-| 2026-02-22 | heart-gift webapp | Romantic UI + smooth animations works well | romantic_ui_design +0.05 |
-
----
-
-## 🔄 Evolution Roadmap
-
-### Month 1 - Automation Core ✅
-- [x] Learner agent
-- [x] Skill tracking
-- [x] Basic workflows
-- [x] Designer agent
-
-### Month 2 - Codebase Understanding
-- [ ] Code search tool
-- [ ] Dependency graph
-- [ ] Test generation
-
-### Month 3 - Observability
-- [ ] Prometheus integration
-- [ ] Grafana dashboards
-- [ ] Production debugging
+### Container Limits
+- CPU: 2 cores max
+- Memory: 4GB max
+- Network: Bridge mode (isolated)
 
 ---
 
@@ -349,14 +341,13 @@ export GRAFANA_URL="https://grafana.example.com"
 - [OpenClaw Docs](https://docs.openclaw.ai)
 - [OpenClaw GitHub](https://github.com/openclaw/openclaw)
 - [ClawHub Skills](https://clawhub.com)
+- [Playwright Docs](https://playwright.dev)
 
 ---
 
-## 👤 Maintained by
+## 📄 License
 
-- **User:** Shii
-- **Agent:** Eye 👁️
-- **Created:** 2026-02-22
+MIT License - Feel free to use and modify!
 
 ---
 

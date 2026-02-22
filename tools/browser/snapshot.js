@@ -2,10 +2,16 @@
 // Capture UI snapshot for designer agent to analyze
 import { chromium } from 'playwright';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const workspaceRoot = path.resolve(__dirname, '..', '..');
 
 (async () => {
   const url = process.argv[2];
-  const outDir = process.argv[3] || './snapshots';
+  const outDir = process.argv[3] || path.join(workspaceRoot, 'screenshots');
 
   if (!url) {
     console.error('Usage: node snapshot.js <url> [output_dir]');

@@ -1,0 +1,70 @@
+# Skills Registry - OpenClaw Learning System
+# Confidence (0-1) + failure patterns for each skill
+# Copy this to skills.yaml and update as agent learns
+
+skills:
+  # === CODING SKILLS ===
+  - name: nextjs_codegen
+    confidence: 0.5
+    last_used: null
+    uses_count: 0
+    common_failures:
+      - missing_env_vars
+      - build_cache_issue
+
+  - name: vercel_deploy
+    confidence: 0.5
+    last_used: null
+    uses_count: 0
+    common_failures:
+      - wrong_project_link
+      - missing_vercel_token
+
+  - name: ci_github_actions
+    confidence: 0.4
+    last_used: null
+    uses_count: 0
+    common_failures:
+      - secrets_not_set
+
+  # === CREATIVE SKILLS ===
+  - name: ui_design
+    confidence: 0.5
+    last_used: null
+    uses_count: 0
+    common_failures:
+      - animation_performance
+      - mobile_responsiveness
+
+  - name: creative_html_css
+    confidence: 0.5
+    last_used: null
+    uses_count: 0
+    common_failures:
+      - browser_compatibility
+
+  # === GOD MODE SKILLS ===
+  - name: browser_automation
+    confidence: 0.5
+    last_used: null
+    uses_count: 0
+    common_failures:
+      - rate_limiting
+      - captcha
+      - timeout_on_heavy_sites
+
+  - name: ui_snapshot
+    confidence: 0.5
+    last_used: null
+    uses_count: 0
+    common_failures:
+      - complex_spa
+      - auth_protected
+
+# === LEARNING METADATA ===
+meta:
+  version: 1.0
+  created: null
+  last_updated: null
+  total_uses: 0
+  avg_confidence: 0.5
