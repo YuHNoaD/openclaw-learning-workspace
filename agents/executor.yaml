@@ -1,37 +1,53 @@
-# Executor Agent - Tool Executor with Self-Healing
-# Execute tools và tự sửa lỗi khi fail
+# Executor Agent - Full Automation (God Mode)
+# Execute tools with self-healing capability
 
 name: executor
-role: Tool Executor & Self-Healer
+role: Full Automation Executor + Self-Healer
 model: gpt-4.1
 description: |
-  Execute tools and commands.
-  If a command fails, analyze error, propose fix, apply, retry.
-  Self-healing capability for common issues.
+  Execute shell, browser, git, and vercel tools.
+  Full power but sandboxed within Docker container.
+  If error occurs, analyze and retry once.
 
 trigger:
   - when_tool_needed
   - when_deployment_required
+  - when_browser_automation_needed
+
+capabilities:
+  tools:
+    - shell      # Execute any shell command
+    - browser    # Browse web, take screenshots, interact
+    - git        # Create repos, commit, push
+    - vercel     # Deploy webapps
+    - web        # HTTP requests
+
+  permissions:
+    - fs.read
+    - fs.write
+    - fs.delete  # Be careful!
+    - net.outbound
+    - exec
 
 process:
   1_execute_tool:
-    - Run the tool/command
+    - Choose appropriate tool
+    - Run the command
     - Capture output
-    - Check for errors
 
   2_if_failed_analyze:
     - What went wrong?
-    - Common failure patterns:
-      - Missing dependencies → install them
-      - Auth expired → re-auth
-      - Port conflict → use different port
+    - Check common patterns:
+      - Missing dependencies → npm install
+      - Auth expired → check token
       - Build error → fix code
-      - Rate limit → wait and retry
+      - Network error → retry
+      - Permission denied → check permissions
 
   3_propose_fix:
     - Identify root cause
     - Generate fix
-    - Show fix to user (transparency)
+    - Log fix for transparency
 
   4_apply_and_retry:
     - Apply the fix
@@ -46,37 +62,37 @@ self_healing_rules:
     - error: "EADDRINUSE"
       fix: "Kill process on port or use different port"
     - error: "Authentication failed"
-      fix: "Re-run auth command"
+      fix: "Check token in environment"
     - error: "Build failed"
       fix: "Check build logs, fix syntax/type errors"
     - error: "Rate limit"
       fix: "Wait 60 seconds, then retry"
+    - error: "Playwright browser not found"
+      fix: "npx playwright install chromium"
 
-tools:
-  - exec (shell commands)
-  - git (git operations)
-  - vercel (deployment)
+safety_rules:
+  - Never run: "rm -rf /"
+  - Never run: "sudo"
+  - Never run: "chmod 777"
+  - Never expose tokens in logs
+  - Always validate user input
 
 output_schema:
+  tool: string
   command: string
   status: string        # success, failed, retried
   output: string
   error: string
   fix_applied: string
   retry_result: string
+  url: string           # If deployment, return URL
 
 example_output:
+  tool: vercel
   command: "vercel --yes"
   status: success
-  output: "Deployed to https://..."
+  output: "Deployed to https://my-app.vercel.app"
   error: null
   fix_applied: null
   retry_result: null
-
-example_retry:
-  command: "vercel --yes"
-  status: retried
-  output: null
-  error: "Build failed: module not found"
-  fix_applied: "npm install missing-module"
-  retry_result: "success - deployed to https://..."
+  url: "https://my-app.vercel.app"

@@ -1,2 +1,44 @@
+# Shell Tool - Full System Access (Sandboxed)
+# Enables agent to run shell commands
+
 name: shell
 type: shell
+description: |
+  Execute shell commands on the system.
+  Full power but sandboxed within Docker container.
+
+commands:
+  # Generic shell execution
+  exec:
+    command: "{{command}}"
+    description: "Execute any shell command"
+    examples:
+      - "shell.exec 'npm create vite@latest my-app'"
+      - "shell.exec 'ls -la'"
+      - "shell.exec 'cat package.json'"
+
+# Permissions
+permissions:
+  - fs.read       # Read files
+  - fs.write      # Write files
+  - fs.delete     # Delete files (be careful!)
+  - net.outbound  # Internet access
+  - exec          # Execute commands
+
+# Blocked commands (safety)
+blocked_commands:
+  - "rm -rf /"           # Never delete root
+  - "sudo"               # No sudo access
+  - "chmod 777"          # No unsafe permissions
+  - ":(){ :|:& };:"      # Fork bomb
+
+# Working directory
+workdir: /app/workspace
+
+# Timeout
+timeout_seconds: 300
+
+# Retry on failure
+retry:
+  max_attempts: 2
+  delay_seconds: 5

@@ -1,0 +1,17 @@
+{
+  "name": "openclaw-browser-tools",
+  "version": "1.0.0",
+  "description": "Browser automation tools for OpenClaw God Mode",
+  "type": "module",
+  "scripts": {
+    "open": "node open.js",
+    "screenshot": "node screenshot.js",
+    "click": "node click.js",
+    "fill": "node fill.js",
+    "crawl": "node crawl.js",
+    "snapshot": "node snapshot.js"
+  },
+  "dependencies": {
+    "playwright": "^1.42.0"
+  }
+}

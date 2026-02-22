@@ -1,24 +1,127 @@
+# Planner Agent - Intent Router (God Mode)
+# Route natural language prompts to workflows
+
 name: planner
-role: Workflow Planner
+role: Intent Router + Workflow Selector
 model: gpt-4.1
+description: |
+  Map short natural prompts to appropriate workflows.
+  Read skills.yaml to avoid past failures.
+  Choose best approach based on confidence.
+
+trigger:
+  - every_task_start
+
+capabilities:
+  tools:
+    - memory.search
+    - memory.read
+    - read_file: memory/skills.yaml
+
+process:
+  1_analyze_intent:
+    - What does user want?
+    - Is it a UI/UX task? → designer
+    - Is it a bug fix? → bugfix_pr
+    - Is it a deployment? → webapp_autodeploy
+    - Is it a crawl? → crawl_and_commit
+    - Is it DevOps? → devops_automation
+
+  2_check_skills:
+    - Read skills.yaml
+    - Check confidence levels
+    - Review common_failures
+    - Identify risks
+
+  3_choose_workflow:
+    - Select appropriate playbook
+    - High confidence skills → proceed
+    - Low confidence → warn user or ask clarification
+
+  4_plan_steps:
+    - Break down into agent steps
+    - Identify tools needed
+    - Estimate complexity
+
+  5_output_plan:
+    - Chosen workflow
+    - Step-by-step plan
+    - Risk assessment
+    - Expected output
+
 system_prompt: |
-  You are OpenClaw Planner.
+  You are OpenClaw Planner (God Mode).
 
   Before planning:
-  - Read memory/skills.yaml
+  - Read memory/skills.yaml to check past performance
   - Prefer strategies with higher confidence
   - Avoid known failure patterns
+  - Warn user about low-confidence skills
 
-  Choose workflow:
-  - webapp_autodeploy
-  - crawl_and_commit
-  - bugfix_pr
-  - devops_automation
-tools:
-  - memory.search
-  - memory.read
-  - memory.read_file: memory/skills.yaml
+  Available workflows:
+  - webapp_autodeploy: Create + deploy webapp
+  - bugfix_pr: Fix bug + create PR
+  - crawl_and_commit: Crawl data + commit
+  - devops_automation: Infra + CI/CD
+
+  Available tools:
+  - shell: Execute commands
+  - browser: Browse web, screenshots
+  - git: GitHub operations
+  - vercel: Deploy webapps
+
 output_schema:
+  intent: string
   workflow: string
-  steps: list
-  risks: list
+  confidence: number
+
+  steps:
+    - agent: string
+      description: string
+      tool: string (optional)
+      estimated_time: string
+
+  risks:
+    - description: string
+      mitigation: string
+
+  skills_used:
+    - name: string
+      confidence: number
+
+  expected_output: string
+
+example_output:
+  intent: "Create romantic heart webapp for gifting"
+  workflow: "webapp_autodeploy"
+  confidence: 0.85
+
+  steps:
+    - agent: designer
+      description: "Generate romantic UI design brief"
+      estimated_time: "10s"
+    - agent: coder
+      description: "Generate HTML/CSS/JS"
+      estimated_time: "30s"
+    - agent: executor
+      tool: vercel.preview
+      description: "Deploy preview"
+      estimated_time: "60s"
+    - agent: validator
+      description: "Check URL health"
+      estimated_time: "10s"
+    - agent: learner
+      description: "Update skills"
+      estimated_time: "5s"
+
+  risks:
+    - description: "vercel_deploy has 80% confidence"
+      mitigation: "Self-healing enabled, will retry on fail"
+
+  skills_used:
+    - name: romantic_ui_design
+      confidence: 0.75
+    - name: vercel_deploy
+      confidence: 0.80
+
+  expected_output: "Deployed webapp URL"

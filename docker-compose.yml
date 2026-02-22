@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  openclaw-godmode:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openclaw-godmode
+    volumes:
+      # Workspace - main working directory
+      - ./workspace:/app/workspace
+      # Tools - browser, shell, etc
+      - ./tools:/app/tools
+      # Config - agents, playbooks
+      - ./agents:/app/agents
+      - ./playbooks:/app/playbooks
+      - ./memory:/app/memory
+      # SSH keys (optional, for git)
+      - ~/.ssh:/root/.ssh:ro
+    environment:
+      # Tokens (set these in .env file)
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - VERCEL_TOKEN=${VERCEL_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # Config
+      - NODE_ENV=production
+      - OPENCLAW_MODE=godmode
+    network_mode: bridge
+    # Security: no privileged mode, limited capabilities
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    # Keep container running
+    tty: true
+    stdin_open: true
+    # Restart policy
+    restart: unless-stopped

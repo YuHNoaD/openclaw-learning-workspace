@@ -1,6 +1,64 @@
+# Git Tool - GitHub Operations
+# Create repos, commit, push, create PRs
+
 name: git
 type: shell
+description: |
+  Git and GitHub CLI operations.
+  Create repos, commit code, push, create PRs.
+
 commands:
-  commit: "git commit -am"
-  push: "git push"
-  pr: "gh pr create --fill"
+  # Create new GitHub repository
+  create_repo:
+    command: "gh repo create {{repo}} --source=. --remote=origin --push --{{visibility}}"
+    description: "Create GitHub repository and push"
+    examples:
+      - "git.create_repo my-app --public"
+      - "git.create_repo my-secret-app --private"
+
+  # Initialize git
+  init:
+    command: "git init && git add . && git commit -m 'Initial commit'"
+    description: "Initialize git repository"
+
+  # Commit changes
+  commit:
+    command: "git add . && git commit -m '{{message}}'"
+    description: "Stage and commit all changes"
+    examples:
+      - "git.commit 'Add new feature'"
+
+  # Push to remote
+  push:
+    command: "git push -u origin {{branch}}"
+    description: "Push to remote branch"
+    examples:
+      - "git.push main"
+      - "git.push feature-branch"
+
+  # Create pull request
+  pr:
+    command: "gh pr create --title '{{title}}' --body '{{body}}' --base {{base_branch}}"
+    description: "Create pull request"
+    examples:
+      - "git.pr --title 'Add feature' --body 'Description' --base main"
+
+  # Clone repository
+  clone:
+    command: "gh repo clone {{repo}} {{directory}}"
+    description: "Clone repository"
+    examples:
+      - "git.clone owner/repo my-project"
+
+# Permissions
+permissions:
+  - fs.read
+  - fs.write
+  - net.outbound
+  - exec
+
+# Requires gh CLI auth
+requires_auth: gh
+
+# Timeout
+timeout_seconds: 60

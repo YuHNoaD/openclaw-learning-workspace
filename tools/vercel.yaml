@@ -1,5 +1,56 @@
+# Vercel Tool - Deployment Automation
+# Deploy webapps to Vercel
+
 name: vercel
 type: shell
+description: |
+  Deploy webapps to Vercel.
+  Create preview and production deployments.
+
 commands:
-  preview: "vercel --yes --token=$VERCEL_TOKEN"
-  prod: "vercel --prod --yes --token=$VERCEL_TOKEN"
+  # Deploy preview
+  preview:
+    command: "vercel --yes --token=$VERCEL_TOKEN"
+    description: "Deploy preview to Vercel"
+    output_parser: "grep -Eo 'https://[a-zA-Z0-9.-]+\\.vercel\\.app' | tail -n 1"
+
+  # Deploy production
+  prod:
+    command: "vercel --prod --yes --token=$VERCEL_TOKEN"
+    description: "Deploy to production"
+    output_parser: "grep -Eo 'https://[a-zA-Z0-9.-]+\\.vercel\\.app' | tail -n 1"
+
+  # List deployments
+  list:
+    command: "vercel list --token=$VERCEL_TOKEN"
+    description: "List all deployments"
+
+  # Inspect deployment
+  inspect:
+    command: "vercel inspect {{url}} --token=$VERCEL_TOKEN"
+    description: "Inspect deployment details"
+
+  # Remove deployment
+  remove:
+    command: "vercel remove {{url}} --yes --token=$VERCEL_TOKEN"
+    description: "Remove deployment"
+
+  # Set environment variable
+  env:
+    command: "vercel env add {{name}} {{value}} --token=$VERCEL_TOKEN"
+    description: "Set environment variable"
+
+# Permissions
+permissions:
+  - fs.read
+  - net.outbound
+  - exec
+
+# Requires Vercel token
+requires_auth: vercel
+
+# Timeout
+timeout_seconds: 180
+
+# Output parsing
+parse_url: true

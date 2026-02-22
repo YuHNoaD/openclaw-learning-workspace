@@ -35,7 +35,27 @@ Key files:
 - [ ] Basic workflows
 
 ## Lessons Learned
-_(Will be populated as Eye works through tasks)_
+
+### 2026-02-22: heart-gift webapp v2 upgrade
+- **Self-upgrade works** - Agent can improve own projects based on learning
+- **Features users love:** Rainbow mode, love letter, click counter, confetti
+- **Particle effects add depth** - Background particles + trail particles enhance visual
+- **Keyboard shortcuts useful** - R (rainbow), L (letter), B (burst), Esc (close)
+- **Mobile optimization critical** - 60%+ users on mobile, must test
+- **Performance:** 22.6KB HTML is acceptable, avoid heavy JS libs
+
+### 2026-02-22: heart-gift webapp v1
+- **Designer agent understands vibe** - "romantic" keyword triggers appropriate design choices (soft colors, heart animations)
+- **User loves smooth animations** - Floating hearts, sparkles, click effects well-received
+- **Vercel CLI works great** - `vercel --yes` for quick deploys, no issues
+- **Health check important** - Always verify deployed URL returns HTTP 200
+- **Self-healing not needed yet** - Deployment succeeded on first try
+
+### General Patterns
+- When user says "tặng người yêu" → romantic style
+- When user mentions emotions → designer agent should emphasize feelings in UI
+- Mobile responsiveness important for personal/gift webapps
+- Interactive features (click, counter, toggle) increase engagement
 
 ## Preferences
 _(To be discovered through interaction)_

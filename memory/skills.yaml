@@ -45,30 +45,62 @@ skills:
 
   # === CREATIVE SKILLS (NEW) ===
   - name: romantic_ui_design
-    confidence: 0.7
+    confidence: 0.75
     last_used: 2026-02-22
-    uses_count: 1
+    uses_count: 2
     common_failures:
       - animation_performance
       - mobile_responsiveness
 
   - name: creative_html_css
-    confidence: 0.75
+    confidence: 0.82
     last_used: 2026-02-22
-    uses_count: 1
+    uses_count: 2
     common_failures:
       - browser_compatibility
 
+  # === GOD MODE SKILLS (NEW) ===
+  - name: browser_automation
+    confidence: 0.9
+    last_used: 2026-02-22
+    uses_count: 2
+    common_failures:
+      - rate_limiting
+      - captcha
+
+  - name: ui_snapshot
+    confidence: 0.85
+    last_used: 2026-02-22
+    uses_count: 1
+    common_failures:
+      - complex_spa
+      - auth_protected
+
 # === LEARNING METADATA ===
 meta:
-  version: 1.1
+  version: 1.2
   created: 2026-02-22
   last_updated: 2026-02-22
-  total_uses: 2
-  avg_confidence: 0.56
+  total_uses: 4
+  avg_confidence: 0.61
 
   recent_successes:
-    - task: "heart-gift webapp"
+    - task: "heart-gift webapp v2 upgrade"
+      date: 2026-02-22
+      url: https://heart-gift-flame.vercel.app
+      skills_used:
+        - romantic_ui_design
+        - creative_html_css
+        - vercel_deploy
+      improvements:
+        - Added particle background
+        - Rainbow mode toggle
+        - Love letter feature
+        - Click counter with confetti
+        - Better mobile responsive
+      result: success
+
+    - task: "heart-gift webapp v1"
       date: 2026-02-22
       url: https://heart-gift-flame.vercel.app
       skills_used:

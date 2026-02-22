@@ -1,0 +1,70 @@
+# Browser Tool - Playwright Automation
+# Enables agent to browse web, take screenshots, interact with pages
+
+name: browser
+type: shell
+description: |
+  Browser automation using Playwright.
+  Can open URLs, take screenshots, click elements, fill forms, crawl content.
+
+commands:
+  # Open URL in browser
+  open:
+    command: "cd tools/browser && node open.js '{{url}}' {{headless}}"
+    description: "Open URL in browser (visible or headless)"
+    examples:
+      - "browser.open https://example.com"
+      - "browser.open https://example.com headless"
+
+  # Take screenshot
+  screenshot:
+    command: "cd tools/browser && node screenshot.js '{{url}}' '{{output}}'"
+    description: "Take full-page screenshot"
+    examples:
+      - "browser.screenshot https://example.com screenshot.png"
+      - "browser.screenshot https://example.com ./snapshots/page.png"
+
+  # Click element
+  click:
+    command: "cd tools/browser && node click.js '{{url}}' '{{selector}}'"
+    description: "Click on element by CSS selector"
+    examples:
+      - "browser.click https://example.com 'button.submit'"
+      - "browser.click https://example.com '#login-btn'"
+
+  # Fill form field
+  fill:
+    command: "cd tools/browser && node fill.js '{{url}}' '{{selector}}' '{{value}}'"
+    description: "Fill form field with text"
+    examples:
+      - "browser.fill https://example.com 'input[name=email]' 'user@example.com'"
+
+  # Crawl page content
+  crawl:
+    command: "cd tools/browser && node crawl.js '{{url}}' '{{selector}}'"
+    description: "Crawl and extract page content"
+    examples:
+      - "browser.crawl https://example.com"
+      - "browser.crawl https://example.com 'article.content'"
+
+  # UI Snapshot (for designer agent)
+  snapshot:
+    command: "cd tools/browser && node snapshot.js '{{url}}' '{{output_dir}}'"
+    description: "Capture UI snapshot (screenshots + metadata)"
+    examples:
+      - "browser.snapshot https://example.com"
+      - "browser.snapshot https://example.com ./snapshots"
+
+# Permissions
+permissions:
+  - net.outbound  # Can access internet
+  - fs.write      # Can write screenshots
+  - exec          # Can run node processes
+
+# Rate limiting
+rate_limit:
+  max_requests_per_minute: 10
+  cooldown_seconds: 6
+
+# Timeout
+timeout_seconds: 60

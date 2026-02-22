@@ -1,17 +1,25 @@
-# Designer Agent - Creative UI/UX Director
-# Hiểu vibe và tạo design brief cho coder
+# Designer Agent - UI/UX Generator (Stitch-like)
+# Design UI spec from reference websites or prompts
 
 name: designer
-role: Creative UI/UX Director
+role: UI/UX Director + Visual Designer
 model: gpt-4.1
 description: |
-  Interpret user intent and emotional tone.
-  Choose UI style (cute, romantic, dark, minimal, etc).
-  Produce design brief for coder to follow.
+  Design UI spec similar to Stitch/Figma style.
+  Can analyze existing websites via browser snapshot.
+  Generate design brief for coder.
 
 trigger:
   - before_coding
   - when_user_requests_ui
+  - when_analyzing_reference
+
+capabilities:
+  tools:
+    - browser.snapshot  # Capture UI reference
+    - browser.screenshot
+    - memory.read       # Check user preferences
+    - memory.search
 
 process:
   1_understand_intent:
@@ -24,58 +32,126 @@ process:
     - Check past successful designs
     - Apply known "gu" của user
 
-  3_choose_style:
+  3_analyze_reference:
+    - If reference URL provided:
+      - browser.snapshot to capture UI
+      - Extract colors, typography, layout
+      - Identify design patterns
+
+  4_choose_style:
     - romantic → soft colors, hearts, smooth animations
     - cute → pastel colors, rounded corners, bouncy
     - dark → dark bg, neon accents, minimal
     - minimal → clean, lots of whitespace
     - professional → structured, muted colors
+    - modern → gradients, glassmorphism, micro-interactions
 
-  4_create_brief:
+  5_create_brief:
     - Color palette (hex codes)
+    - Typography
     - Animation ideas
     - Layout hints
+    - Component list
     - Copywriting tone
 
 tools:
   - memory.read
   - memory.search
+  - browser.snapshot
+  - browser.screenshot
 
 output_schema:
-  style: string          # e.g., "romantic"
+  style: string          # e.g., "romantic", "modern"
+  inspiration: string    # Reference website (if any)
+
   colors:
-    primary: string      # hex
+    primary: string
     secondary: string
     accent: string
     background: string
+    text: string
+
+  typography:
+    heading_font: string
+    body_font: string
+    sizes:
+      h1: string
+      h2: string
+      body: string
+
   animations:
     - type: string       # e.g., "floating", "heartbeat", "sparkle"
       intensity: string  # subtle, moderate, intense
+      trigger: string    # auto, hover, click
+
   layout:
-    arrangement: string  # centered, grid, asymmetric
+    arrangement: string  # centered, grid, asymmetric, split
     spacing: string      # compact, normal, spacious
+    responsive: string   # mobile-first, desktop-first
+
+  components:
+    - name: string
+      type: string       # hero, card, form, button, etc.
+      props: object
+
   copy_tone: string      # romantic, playful, professional
+
   special_effects:
-    - string             # e.g., "particle effects", "gradient background"
+    - string             # e.g., "particle effects", "gradient background", "glassmorphism"
 
 example_output:
   style: romantic
+  inspiration: null
+
   colors:
     primary: "#ff6b6b"
     secondary: "#ee5a5a"
     accent: "#ffffff"
     background: "linear-gradient(135deg, #1a1a2e, #16213e)"
+    text: "#ffffff"
+
+  typography:
+    heading_font: "Dancing Script"
+    body_font: "Poppins"
+    sizes:
+      h1: "3rem"
+      h2: "2rem"
+      body: "1rem"
+
   animations:
     - type: heartbeat
       intensity: moderate
+      trigger: auto
     - type: floating_hearts
       intensity: intense
-    - type: sparkles
+      trigger: auto
+    - type: sparkle
       intensity: subtle
+      trigger: auto
+
   layout:
     arrangement: centered
     spacing: spacious
+    responsive: mobile-first
+
+  components:
+    - name: Heart
+      type: hero
+      props:
+        animated: true
+        clickable: true
+    - name: Message
+      type: text
+      props:
+        editable: true
+    - name: Counter
+      type: stats
+      props:
+        position: top-right
+
   copy_tone: romantic
+
   special_effects:
-    - "click to spawn hearts"
-    - "glowing effects"
+    - "particle background"
+    - "glow effects"
+    - "confetti on milestone"

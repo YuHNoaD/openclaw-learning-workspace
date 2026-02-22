@@ -1,0 +1,94 @@
+{
+  "title": "❤️ For You - Love Gift",
+  "url": "https://heart-gift-flame.vercel.app/",
+  "elements": [
+    {
+      "type": "H2",
+      "text": "💌 Thư Tình",
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(214, 48, 49)",
+        "fontSize": "25.6px",
+        "fontFamily": "\"Dancing Script\", cursive",
+        "padding": "0px",
+        "margin": "0px 0px 20px"
+      }
+    },
+    {
+      "type": "button",
+      "text": "×",
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(99, 110, 114)",
+        "fontSize": "24px",
+        "fontFamily": "Arial",
+        "padding": "0px",
+        "margin": "0px"
+      }
+    },
+    {
+      "type": "button",
+      "text": "💌 Thư tình",
+      "styles": {
+        "backgroundColor": "rgba(255, 255, 255, 0.1)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.4786px",
+        "fontFamily": "Poppins, sans-serif",
+        "padding": "10.8483px 20.5448px",
+        "margin": "0px"
+      }
+    },
+    {
+      "type": "button",
+      "text": "🌈 Rainbow",
+      "styles": {
+        "backgroundColor": "rgba(255, 255, 255, 0.1)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.4786px",
+        "fontFamily": "Poppins, sans-serif",
+        "padding": "10.8483px 20.5448px",
+        "margin": "0px"
+      }
+    },
+    {
+      "type": "button",
+      "text": "🎵 Nhạc",
+      "styles": {
+        "backgroundColor": "rgba(255, 255, 255, 0.1)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.4786px",
+        "fontFamily": "Poppins, sans-serif",
+        "padding": "10.8483px 20.5448px",
+        "margin": "0px"
+      }
+    },
+    {
+      "type": "button",
+      "text": "💥 Burst",
+      "styles": {
+        "backgroundColor": "rgba(255, 255, 255, 0.1)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.4786px",
+        "fontFamily": "Poppins, sans-serif",
+        "padding": "10.8483px 20.5448px",
+        "margin": "0px"
+      }
+    },
+    {
+      "type": "input",
+      "inputType": "text",
+      "placeholder": "Nhập lời nhắn của bạn...",
+      "styles": {
+        "backgroundColor": "rgba(255, 255, 255, 0.1)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "21.2359px",
+        "fontFamily": "\"Dancing Script\", cursive",
+        "padding": "10px 20px",
+        "margin": "15px 0px 0px"
+      }
+    }
+  ],
+  "colors": {
+    "primary": "rgba(0, 0, 0, 0)"
+  }
+}
