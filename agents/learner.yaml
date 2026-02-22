@@ -1,26 +1,118 @@
+# Learner Agent - Postmortem Analyst with Stack Tracking (v2)
+# Tracks stack success rates and updates memory
+
 name: learner
-role: Postmortem Analyst & Skill Trainer
+role: Postmortem Analyst + Stack Performance Tracker
 model: gpt-4.1
-system_prompt: |
-  You analyze completed workflows and validation reports.
+description: |
+  Analyze completed workflows and track stack performance.
+  Update skills.yaml with success rates for different stacks.
+  Identify which combinations work best.
 
-  Your goals:
-  - Extract lessons learned
-  - Identify failure patterns
-  - Update skill confidence in memory/skills.yaml
-  - Propose small updates to soul.md (guidelines)
+trigger:
+  - after_workflow_complete
+  - on_failure
+  - manual: /postmortem
 
-  Rules:
-  - Increase confidence by +0.05 for success
-  - Decrease confidence by -0.1 for failure
-  - Append new failure patterns to common_failures
+process:
+  1_review_task:
+    - Read task intent
+    - Read execution result
+    - Check deployment status
+
+  2_analyze_stack_performance:
+    - What stack was used?
+    - Did it build successfully?
+    - Did it deploy successfully?
+    - Any runtime errors?
+
+  3_identify_patterns:
+    - What worked well?
+    - What failed?
+    - Root causes
+
+  4_update_stack_memory:
+    - Increase success_rate if deployed OK
+    - Decrease if failed
+    - Add failure patterns
+
+  5_update_general_memory:
+    - Add lessons to MEMORY.md
+    - Update user preferences
+
+  6_recommend_improvements:
+    - Suggest better stacks for next time
+    - Note env variables missing
+
 tools:
   - memory.read
   - memory.write
+
 output_schema:
-  lessons: list
+  lessons:
+    - string
+
+  stack_performance:
+    stack_name: string
+    success: boolean
+    success_rate_delta: number
+    new_failures: list
+
   skill_updates:
     - name: string
       confidence_delta: number
-      new_failures: list
+      reason: string
+
   soul_patch: string
+
+  recommendations:
+    - string
+
+example_output:
+  lessons:
+    - "Supabase + Prisma works well for task management apps"
+    - "Remember to set NEXT_PUBLIC_SUPABASE_URL in Vercel env"
+
+  stack_performance:
+    stack_name: "tailwind_shadcn_supabase_vercel"
+    success: true
+    success_rate_delta: +0.05
+    new_failures: []
+
+  skill_updates:
+    - name: nextjs_with_supabase
+      confidence_delta: +0.05
+      reason: "Deployed successfully with proper env setup"
+
+  soul_patch: |
+    When using Supabase, always check env vars are set before deploying
+
+  recommendations:
+    - "Add pre-deploy check for required env vars"
+    - "Consider adding Supabase CLI for local development"
+
+# Stack Performance Tracking
+stack_tracking:
+  metrics_tracked:
+    - build_success: boolean
+    - deploy_success: boolean
+    - runtime_errors: list
+    - performance_score: number
+
+  success_rate_calculation:
+    formula: "(successful_deploys / total_attempts) * confidence_weight"
+    confidence_weight: 0.1    # Each success adds 10%
+    failure_penalty: 0.15     # Each failure removes 15%
+
+  stack_recommendations:
+    - pattern: "landing_page"
+      recommended_stack: "tailwind_framer_vercel"
+      reason: "Highest success rate (0.95)"
+
+    - pattern: "dashboard"
+      recommended_stack: "tailwind_shadcn_supabase_vercel"
+      reason: "Good balance of features and reliability (0.88)"
+
+    - pattern: "saas_mvp"
+      recommended_stack: "tailwind_shadcn_supabase_prisma_vercel"
+      reason: "Full-featured with good success rate (0.82)"

@@ -1,0 +1,181 @@
+# Stack Selector Agent - Intelligent Library & Stack Chooser
+# Automatically selects modern, popular libraries based on intent
+
+name: stack_selector
+role: Library & Stack Chooser
+model: gpt-4.1
+description: |
+  Choose modern, popular libraries and stacks based on project intent.
+  Considers success rates from memory to prefer proven combinations.
+  Balances "hot" trends with reliability.
+
+trigger:
+  - after_planner
+  - when_stack_selection_needed
+
+process:
+  1_analyze_intent:
+    - What type of project? (landing, SaaS, MVP, dashboard, blog, ecommerce)
+    - What features needed? (auth, realtime, payments, storage)
+    - What scale expected? (personal, team, enterprise)
+
+  2_check_memory:
+    - Read memory/skills.yaml for stack success rates
+    - Prefer stacks with higher success rates
+    - Avoid stacks with known failures
+
+  3_select_ui_stack:
+    Landing Pages:
+      - Tailwind CSS (styling)
+      - Framer Motion (animations)
+      - Lucide Icons
+
+    Dashboards/SaaS:
+      - Tailwind CSS (styling)
+      - shadcn/ui (components)
+      - Recharts (charts)
+
+    MVPs:
+      - Tailwind CSS
+      - shadcn/ui
+      - React Hook Form + Zod
+
+  4_select_backend_stack:
+    Auth + Realtime + DB:
+      - Supabase (recommended)
+      - NextAuth.js (alternative)
+
+    Simple CRUD:
+      - SQLite + Prisma
+      - Local file storage
+
+    Scale/Production:
+      - PostgreSQL + Prisma
+      - Redis (caching)
+
+  5_select_hosting:
+    - Vercel (default, recommended)
+    - Netlify (alternative)
+    - Railway (for full backend)
+
+  6_output_stack:
+    - Complete stack recommendation
+    - Environment variables needed
+    - Setup instructions
+
+tools:
+  - memory.read
+  - memory.search
+
+output_schema:
+  project_type: string       # landing, saas, mvp, dashboard, etc.
+  
+  ui_stack:
+    framework: string        # next.js, react, etc.
+    styling: string          # tailwind, css modules
+    components: string       # shadcn/ui, radix, chakra
+    animations: string       # framer-motion, none
+    icons: string            # lucide, heroicons
+    forms: string            # react-hook-form + zod
+
+  backend_stack:
+    type: string             # serverless, monolith, api-only
+    auth: string             # supabase, nextauth, clerk
+    database: string         # supabase, postgres, sqlite
+    orm: string              # prisma, drizzle
+    realtime: string         # supabase, pusher, none
+    storage: string          # supabase, s3, local
+
+  hosting:
+    platform: string         # vercel, netlify, railway
+    region: string           # auto, us-east, asia
+
+  env_required:
+    - name: string
+      description: string
+      required: boolean
+
+  setup_steps:
+    - string
+
+  confidence: number         # based on memory success rates
+
+example_output:
+  project_type: saas
+
+  ui_stack:
+    framework: next.js
+    styling: tailwind
+    components: shadcn/ui
+    animations: framer-motion
+    icons: lucide
+    forms: react-hook-form + zod
+
+  backend_stack:
+    type: serverless
+    auth: supabase
+    database: supabase (postgres)
+    orm: prisma
+    realtime: supabase
+    storage: supabase
+
+  hosting:
+    platform: vercel
+    region: auto
+
+  env_required:
+    - name: NEXT_PUBLIC_SUPABASE_URL
+      description: Supabase project URL
+      required: true
+    - name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+      description: Supabase anonymous key
+      required: true
+    - name: DATABASE_URL
+      description: Postgres connection string
+      required: true
+
+  setup_steps:
+    - "npx create-next-app@latest --typescript --tailwind"
+    - "npx shadcn-ui@latest init"
+    - "npm install @supabase/supabase-js prisma"
+    - "npx prisma init"
+
+  confidence: 0.82
+
+# Stack Recommendations by Project Type
+stack_recommendations:
+  landing_page:
+    ui: tailwind + framer-motion
+    backend: none
+    hosting: vercel
+    success_rate: 0.95
+
+  dashboard:
+    ui: tailwind + shadcn/ui + recharts
+    backend: supabase
+    hosting: vercel
+    success_rate: 0.88
+
+  saas_mvp:
+    ui: tailwind + shadcn/ui + react-hook-form
+    backend: supabase + prisma
+    hosting: vercel
+    success_rate: 0.82
+
+  blog:
+    ui: tailwind + mdx
+    backend: contentlayer
+    hosting: vercel
+    success_rate: 0.90
+
+  ecommerce:
+    ui: tailwind + shadcn/ui
+    backend: stripe + supabase
+    hosting: vercel
+    success_rate: 0.75
+
+  realtime_app:
+    ui: tailwind + framer-motion
+    backend: supabase realtime
+    hosting: vercel
+    success_rate: 0.78

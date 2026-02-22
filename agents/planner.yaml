@@ -1,13 +1,13 @@
-# Planner Agent - Intent Router (God Mode)
-# Route natural language prompts to workflows
+# Planner Agent - Intent Router + Stack Recommender (v2)
+# Routes prompts to workflows and recommends optimal stacks
 
 name: planner
-role: Intent Router + Workflow Selector
+role: Intent Router + Stack Recommender
 model: gpt-4.1
 description: |
-  Map short natural prompts to appropriate workflows.
-  Read skills.yaml to avoid past failures.
-  Choose best approach based on confidence.
+  Map natural language prompts to workflows.
+  Recommend optimal stacks based on intent and success history.
+  Check skills.yaml for proven combinations.
 
 trigger:
   - every_task_start
@@ -20,108 +20,159 @@ capabilities:
 
 process:
   1_analyze_intent:
-    - What does user want?
-    - Is it a UI/UX task? → designer
-    - Is it a bug fix? → bugfix_pr
-    - Is it a deployment? → webapp_autodeploy
-    - Is it a crawl? → crawl_and_commit
-    - Is it DevOps? → devops_automation
+    What type of project?
+    - landing → landing_page workflow
+    - dashboard → dashboard workflow
+    - saas → fullstack_from_idea workflow
+    - blog → blog workflow
+    - ecommerce → fullstack_from_idea workflow
+    - simple_webapp → webapp_autodeploy workflow
 
-  2_check_skills:
-    - Read skills.yaml
-    - Check confidence levels
-    - Review common_failures
-    - Identify risks
+  2_identify_features:
+    - auth needed?
+    - realtime needed?
+    - payments needed?
+    - storage needed?
+    - scale level?
 
-  3_choose_workflow:
-    - Select appropriate playbook
-    - High confidence skills → proceed
-    - Low confidence → warn user or ask clarification
+  3_check_memory:
+    - Read skills.yaml stacks section
+    - Find best matching stack
+    - Check success rates
+    - Review failures to avoid
 
-  4_plan_steps:
-    - Break down into agent steps
-    - Identify tools needed
+  4_recommend_stack:
+    Based on project type + features:
+    - Return primary recommended stack
+    - Return alternative stack
+    - Explain reasoning
+
+  5_plan_workflow:
+    - Select playbook
+    - Identify agents needed
     - Estimate complexity
-
-  5_output_plan:
-    - Chosen workflow
-    - Step-by-step plan
-    - Risk assessment
-    - Expected output
+    - List env vars required
 
 system_prompt: |
-  You are OpenClaw Planner (God Mode).
+  You are OpenClaw Planner v2 with Stack Intelligence.
 
   Before planning:
-  - Read memory/skills.yaml to check past performance
-  - Prefer strategies with higher confidence
-  - Avoid known failure patterns
-  - Warn user about low-confidence skills
+  1. Read memory/skills.yaml to check stack success rates
+  2. Match project type to best stack
+  3. Avoid stacks with known failures
+  4. Prefer stacks with higher success rates
 
   Available workflows:
-  - webapp_autodeploy: Create + deploy webapp
-  - bugfix_pr: Fix bug + create PR
-  - crawl_and_commit: Crawl data + commit
-  - devops_automation: Infra + CI/CD
+  - fullstack_from_idea: Full stack apps (SaaS, dashboards, ecommerce)
+  - webapp_autodeploy: Simple webapps without backend
+  - bugfix_pr: Bug fixes + PR creation
+  - crawl_and_commit: Data crawling + commit
 
-  Available tools:
-  - shell: Execute commands
-  - browser: Browse web, screenshots
-  - git: GitHub operations
-  - vercel: Deploy webapps
+  Stack recommendations by type:
+  - landing_page → tailwind_framer_vercel (0.95 success)
+  - dashboard → tailwind_shadcn_supabase_vercel (0.88 success)
+  - saas_mvp → tailwind_shadcn_supabase_prisma_vercel (0.82 success)
+  - blog → tailwind_mdx_vercel (0.90 success)
+  - simple_webapp → html_css_vercel (0.90 success)
 
 output_schema:
   intent: string
+  project_type: string
   workflow: string
   confidence: number
+
+  features_needed:
+    auth: boolean
+    realtime: boolean
+    payments: boolean
+    storage: boolean
+
+  recommended_stack:
+    name: string
+    components: list
+    success_rate: number
+    reasoning: string
+
+  alternative_stack:
+    name: string
+    success_rate: number
 
   steps:
     - agent: string
       description: string
       tool: string (optional)
-      estimated_time: string
 
   risks:
     - description: string
       mitigation: string
 
-  skills_used:
+  env_required:
     - name: string
-      confidence: number
+      description: string
+      required: boolean
 
   expected_output: string
 
 example_output:
-  intent: "Create romantic heart webapp for gifting"
-  workflow: "webapp_autodeploy"
+  intent: "làm MVP quản lý task cho team nhỏ"
+  project_type: "saas_mvp"
+  workflow: "fullstack_from_idea"
   confidence: 0.85
 
+  features_needed:
+    auth: true
+    realtime: true
+    payments: false
+    storage: false
+
+  recommended_stack:
+    name: "tailwind_shadcn_supabase_prisma_vercel"
+    components:
+      - tailwind
+      - shadcn/ui
+      - supabase
+      - prisma
+      - vercel
+    success_rate: 0.82
+    reasoning: "Proven stack for SaaS MVPs with auth and realtime"
+
+  alternative_stack:
+    name: "tailwind_shadcn_supabase_vercel"
+    success_rate: 0.88
+
   steps:
+    - agent: stack_selector
+      description: "Confirm stack selection"
     - agent: designer
-      description: "Generate romantic UI design brief"
-      estimated_time: "10s"
+      description: "Design dashboard UI"
+    - agent: backend
+      description: "Design task schema"
     - agent: coder
-      description: "Generate HTML/CSS/JS"
-      estimated_time: "30s"
+      description: "Generate Next.js app"
     - agent: executor
-      tool: vercel.preview
-      description: "Deploy preview"
-      estimated_time: "60s"
+      tool: git.create_repo
+      description: "Create GitHub repo"
+    - agent: executor
+      tool: vercel.deploy
+      description: "Deploy to Vercel"
     - agent: validator
-      description: "Check URL health"
-      estimated_time: "10s"
+      description: "Check deployment"
     - agent: learner
-      description: "Update skills"
-      estimated_time: "5s"
+      description: "Update stack performance"
 
   risks:
-    - description: "vercel_deploy has 80% confidence"
-      mitigation: "Self-healing enabled, will retry on fail"
+    - description: "Supabase env vars required"
+      mitigation: "Will prompt user for SUPABASE_URL and ANON_KEY"
 
-  skills_used:
-    - name: romantic_ui_design
-      confidence: 0.75
-    - name: vercel_deploy
-      confidence: 0.80
+  env_required:
+    - name: NEXT_PUBLIC_SUPABASE_URL
+      description: "Supabase project URL"
+      required: true
+    - name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+      description: "Supabase anonymous key"
+      required: true
+    - name: DATABASE_URL
+      description: "Postgres connection string"
+      required: true
 
-  expected_output: "Deployed webapp URL"
+  expected_output: "Deployed task manager at .vercel.app URL"

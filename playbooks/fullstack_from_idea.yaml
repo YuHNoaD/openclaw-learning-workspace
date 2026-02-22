@@ -1,0 +1,160 @@
+# Fullstack from Idea Playbook
+# Complete workflow from idea to deployed fullstack app
+
+name: fullstack_from_idea
+description: |
+  Transform a short prompt into a deployed fullstack application.
+  Automatically selects optimal stack based on intent and memory.
+
+steps:
+  - agent: planner
+    description: "Analyze intent, determine project type"
+
+  - agent: stack_selector
+    description: "Choose optimal stack (UI + backend + hosting)"
+
+  - agent: designer
+    description: "Design UI spec + select UI libraries"
+
+  - agent: backend
+    description: "Design backend + database schema"
+
+  - agent: coder
+    description: "Generate code with selected stack"
+
+  - agent: reviewer
+    description: "Review code quality + env setup"
+
+  - agent: executor
+    tool: git.create_repo
+    description: "Create GitHub repository"
+
+  - agent: executor
+    tool: vercel.deploy
+    description: "Deploy to Vercel"
+
+  - agent: validator
+    description: "Check URL health + functionality"
+
+  - agent: learner
+    description: "Update stack performance + memory"
+
+# Example Flow
+example:
+  user_prompt: "làm MVP quản lý task cho team nhỏ"
+
+  planner:
+    intent: "task_management_mvp"
+    project_type: "saas"
+    features_needed:
+      - auth
+      - CRUD
+      - realtime
+    scale: "team"
+
+  stack_selector:
+    ui_stack:
+      framework: next.js
+      styling: tailwind
+      components: shadcn/ui
+      animations: framer-motion
+    backend_stack:
+      auth: supabase
+      database: supabase
+      orm: prisma
+      realtime: supabase
+    hosting: vercel
+    confidence: 0.82
+
+  designer:
+    style: "modern_minimal"
+    colors:
+      primary: "#3b82f6"
+      accent: "#10b981"
+    ui_libraries:
+      styling: tailwind
+      components: shadcn/ui
+    layout: "dashboard"
+
+  backend:
+    models:
+      - User
+      - Task
+      - Project
+    auth: supabase
+    realtime_channels:
+      - "tasks:projectId"
+
+  coder:
+    output:
+      - "Next.js 14 app with App Router"
+      - "Tailwind + shadcn/ui components"
+      - "Supabase auth integration"
+      - "Prisma schema + client"
+      - "Task CRUD API routes"
+
+  executor_git:
+    repo: "task-manager-mvp"
+    visibility: private
+
+  executor_vercel:
+    url: "https://task-manager-mvp.vercel.app"
+    env_required:
+      - NEXT_PUBLIC_SUPABASE_URL
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY
+      - DATABASE_URL
+
+  validator:
+    status: success
+    url_healthy: true
+    auth_working: true
+
+  learner:
+    stack_performance:
+      stack: "tailwind_shadcn_supabase_vercel"
+      success: true
+      success_rate_delta: +0.05
+    lessons:
+      - "Supabase + Prisma works well for task management"
+      - "shadcn/ui accelerates dashboard development"
+
+# Stack Variations
+variations:
+  simple_landing:
+    skip_agents: [backend]
+    stack_selector:
+      backend: none
+
+  blog:
+    stack_selector:
+      backend: contentlayer
+      ui_libraries:
+        components: none
+        mdx: contentlayer
+
+  ecommerce:
+    backend:
+      payments: stripe
+      models: [Product, Order, User, Cart]
+
+  realtime_chat:
+    backend:
+      realtime: supabase
+      presence: true
+
+# Error Handling
+error_handling:
+  on_stack_failure:
+    - Try alternative stack
+    - Log failure pattern
+    - Update success rate
+
+  on_env_missing:
+    - List required env vars
+    - Provide setup instructions
+    - Pause for user input
+
+  on_deploy_failure:
+    - Analyze build error
+    - Suggest fix
+    - Retry with fix

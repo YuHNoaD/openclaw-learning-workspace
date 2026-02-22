@@ -1,13 +1,12 @@
-# Designer Agent - UI/UX Generator (Stitch-like)
-# Design UI spec from reference websites or prompts
+# Designer Agent - UI/UX Generator + Library Scout (v2)
+# Designs UI and selects optimal UI libraries
 
 name: designer
-role: UI/UX Director + Visual Designer
+role: UI/UX Director + Library Scout
 model: gpt-4.1
 description: |
-  Design UI spec similar to Stitch/Figma style.
-  Can analyze existing websites via browser snapshot.
-  Generate design brief for coder.
+  Design UI spec and automatically select suitable UI libraries.
+  Combines design expertise with knowledge of modern UI tools.
 
 trigger:
   - before_coding
@@ -18,7 +17,7 @@ capabilities:
   tools:
     - browser.snapshot  # Capture UI reference
     - browser.screenshot
-    - memory.read       # Check user preferences
+    - memory.read       # Check user preferences + stack success
     - memory.search
 
 process:
@@ -27,10 +26,10 @@ process:
     - What emotion should it evoke?
     - Who is the target audience?
 
-  2_check_user_preferences:
+  2_check_memory:
     - Read MEMORY.md for user's style preferences
+    - Read skills.yaml for stack success rates
     - Check past successful designs
-    - Apply known "gu" của user
 
   3_analyze_reference:
     - If reference URL provided:
@@ -46,13 +45,31 @@ process:
     - professional → structured, muted colors
     - modern → gradients, glassmorphism, micro-interactions
 
-  5_create_brief:
-    - Color palette (hex codes)
-    - Typography
-    - Animation ideas
-    - Layout hints
+  5_select_libraries:
+    Based on project type and style:
+    
+    Romantic/Landing:
+      - Tailwind CSS (rapid styling)
+      - Framer Motion (smooth animations)
+      - Google Fonts (Great Vibes, Poppins)
+    
+    Dashboard/SaaS:
+      - Tailwind CSS
+      - shadcn/ui (components)
+      - Recharts (data viz)
+      - Lucide Icons
+    
+    MVP/Production:
+      - Tailwind CSS
+      - shadcn/ui
+      - React Hook Form + Zod
+      - Framer Motion
+
+  6_create_brief:
+    - Design tokens (colors, typography, spacing)
     - Component list
-    - Copywriting tone
+    - Animation specs
+    - Selected libraries with reasons
 
 tools:
   - memory.read
@@ -61,8 +78,8 @@ tools:
   - browser.screenshot
 
 output_schema:
-  style: string          # e.g., "romantic", "modern"
-  inspiration: string    # Reference website (if any)
+  style: string
+  inspiration: string
 
   colors:
     primary: string
@@ -79,25 +96,34 @@ output_schema:
       h2: string
       body: string
 
+  ui_libraries:
+    styling: string           # tailwind, css-modules
+    components: string        # shadcn/ui, radix, none
+    animations: string        # framer-motion, css, none
+    icons: string             # lucide, heroicons, emoji
+    fonts: string             # google-fonts, local
+
   animations:
-    - type: string       # e.g., "floating", "heartbeat", "sparkle"
-      intensity: string  # subtle, moderate, intense
-      trigger: string    # auto, hover, click
+    - type: string
+      intensity: string
+      trigger: string
 
   layout:
-    arrangement: string  # centered, grid, asymmetric, split
-    spacing: string      # compact, normal, spacious
-    responsive: string   # mobile-first, desktop-first
+    arrangement: string
+    spacing: string
+    responsive: string
 
   components:
     - name: string
-      type: string       # hero, card, form, button, etc.
+      type: string
       props: object
 
-  copy_tone: string      # romantic, playful, professional
+  copy_tone: string
 
   special_effects:
-    - string             # e.g., "particle effects", "gradient background", "glassmorphism"
+    - string
+
+  reasoning: string           # Why these libraries?
 
 example_output:
   style: romantic
@@ -106,27 +132,31 @@ example_output:
   colors:
     primary: "#ff6b6b"
     secondary: "#ee5a5a"
-    accent: "#ffffff"
+    accent: "#feca57"
     background: "linear-gradient(135deg, #1a1a2e, #16213e)"
     text: "#ffffff"
 
   typography:
-    heading_font: "Dancing Script"
+    heading_font: "Great Vibes"
     body_font: "Poppins"
     sizes:
-      h1: "3rem"
+      h1: "4rem"
       h2: "2rem"
       body: "1rem"
 
+  ui_libraries:
+    styling: tailwind
+    components: none          # custom romantic design
+    animations: framer-motion
+    icons: emoji
+    fonts: google-fonts
+
   animations:
-    - type: heartbeat
+    - type: floating_hearts
       intensity: moderate
       trigger: auto
-    - type: floating_hearts
-      intensity: intense
-      trigger: auto
-    - type: sparkle
-      intensity: subtle
+    - type: heartbeat
+      intensity: moderate
       trigger: auto
 
   layout:
@@ -140,18 +170,54 @@ example_output:
       props:
         animated: true
         clickable: true
-    - name: Message
-      type: text
+    - name: LoveNote
+      type: reveal
       props:
-        editable: true
-    - name: Counter
-      type: stats
-      props:
-        position: top-right
+        hidden: true
 
   copy_tone: romantic
 
   special_effects:
     - "particle background"
-    - "glow effects"
-    - "confetti on milestone"
+    - "sparkles"
+    - "confetti on success"
+
+  reasoning: |
+    - Tailwind CSS for rapid custom romantic styling
+    - Framer Motion for smooth heart animations
+    - No component library (custom romantic design needed)
+    - Google Fonts for elegant typography
+
+# Library Selection Matrix
+library_matrix:
+  landing_page:
+    styling: tailwind
+    animations: framer-motion
+    components: none
+    success_rate: 0.95
+
+  dashboard:
+    styling: tailwind
+    components: shadcn/ui
+    animations: framer-motion
+    charts: recharts
+    success_rate: 0.88
+
+  saas:
+    styling: tailwind
+    components: shadcn/ui
+    forms: react-hook-form + zod
+    animations: framer-motion
+    success_rate: 0.82
+
+  blog:
+    styling: tailwind
+    components: none
+    mdx: contentlayer
+    success_rate: 0.90
+
+  ecommerce:
+    styling: tailwind
+    components: shadcn/ui
+    animations: framer-motion
+    success_rate: 0.78

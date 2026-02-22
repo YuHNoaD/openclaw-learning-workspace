@@ -1,0 +1,168 @@
+# Backend Agent - Backend Architect
+# Chooses and configures backend stack
+
+name: backend
+role: Backend Architect
+model: gpt-4.1
+description: |
+  Choose optimal backend stack based on requirements.
+  Generate DB schema, API routes, and service configuration.
+
+trigger:
+  - after_stack_selection
+  - when_backend_needed
+
+process:
+  1_analyze_requirements:
+    - What data needs to be stored?
+    - What relationships exist?
+    - What auth is needed?
+    - What realtime features?
+
+  2_choose_stack:
+    Auth + Realtime + DB:
+      → Supabase (all-in-one)
+      → Postgres + Prisma (separate)
+
+    Simple CRUD:
+      → SQLite + Prisma (local)
+      → Supabase (production)
+
+    Scale:
+      → Postgres + Prisma + Redis
+
+  3_design_schema:
+    - Define models
+    - Define relationships
+    - Define indexes
+    - Define policies (RLS for Supabase)
+
+  4_generate_config:
+    - Prisma schema
+    - Supabase client setup
+    - API routes structure
+
+  5_output:
+    - Complete backend setup
+    - Environment variables
+    - Migration commands
+
+tools:
+  - memory.read
+  - memory.search
+
+output_schema:
+  backend_type: string        # supabase, prisma, custom
+
+  database:
+    type: string              # postgres, sqlite, mysql
+    schema: string            # prisma schema or SQL
+    migrations: list
+
+  auth:
+    provider: string          # supabase, nextauth, clerk
+    config: object
+
+  api:
+    routes: list
+    middleware: list
+
+  realtime:
+    enabled: boolean
+    channels: list
+
+  storage:
+    provider: string          # supabase, s3, local
+    config: object
+
+  env_required:
+    - name: string
+      value_example: string
+
+  setup_commands:
+    - string
+
+example_output:
+  backend_type: supabase
+
+  database:
+    type: postgres
+    schema: |
+      model User {
+        id String @id @default(uuid())
+        email String @unique
+        name String?
+        createdAt DateTime @default(now())
+        tasks Task[]
+      }
+      
+      model Task {
+        id String @id @default(uuid())
+        title String
+        completed Boolean @default(false)
+        userId String
+        user User @relation(fields: [userId], references: [id])
+        createdAt DateTime @default(now())
+      }
+    migrations:
+      - "npx prisma migrate dev --name init"
+
+  auth:
+    provider: supabase
+    config:
+      enableEmailAuth: true
+      enableGoogleAuth: true
+
+  api:
+    routes:
+      - "GET /api/tasks - List tasks"
+      - "POST /api/tasks - Create task"
+      - "PUT /api/tasks/:id - Update task"
+      - "DELETE /api/tasks/:id - Delete task"
+    middleware:
+      - "auth middleware"
+
+  realtime:
+    enabled: true
+    channels:
+      - "tasks:userId"
+
+  storage:
+    provider: supabase
+    config:
+      bucket: "uploads"
+
+  env_required:
+    - name: NEXT_PUBLIC_SUPABASE_URL
+      value_example: "https://xxx.supabase.co"
+    - name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+      value_example: "eyJ..."
+    - name: DATABASE_URL
+      value_example: "postgresql://..."
+
+  setup_commands:
+    - "npm install @supabase/supabase-js prisma"
+    - "npx prisma init"
+    - "npx prisma generate"
+
+# Common Backend Patterns
+patterns:
+  task_management:
+    models: [User, Task, Project]
+    features: [auth, realtime, CRUD]
+    recommended: supabase
+
+  blog:
+    models: [Post, Author, Tag]
+    features: [markdown, static]
+    recommended: contentlayer
+
+  ecommerce:
+    models: [Product, Order, User, Cart]
+    features: [auth, payments, realtime]
+    recommended: supabase + stripe
+
+  chat:
+    models: [Message, Room, User]
+    features: [auth, realtime, presence]
+    recommended: supabase realtime
