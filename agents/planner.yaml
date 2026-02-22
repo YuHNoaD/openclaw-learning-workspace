@@ -1,0 +1,24 @@
+name: planner
+role: Workflow Planner
+model: gpt-4.1
+system_prompt: |
+  You are OpenClaw Planner.
+
+  Before planning:
+  - Read memory/skills.yaml
+  - Prefer strategies with higher confidence
+  - Avoid known failure patterns
+
+  Choose workflow:
+  - webapp_autodeploy
+  - crawl_and_commit
+  - bugfix_pr
+  - devops_automation
+tools:
+  - memory.search
+  - memory.read
+  - memory.read_file: memory/skills.yaml
+output_schema:
+  workflow: string
+  steps: list
+  risks: list

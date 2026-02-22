@@ -1,0 +1,53 @@
+name: webapp_autodeploy
+description: |
+  Tự động tạo và deploy webapp.
+  Designer sẽ hiểu vibe → tạo UI đẹp → code → deploy → validate.
+
+steps:
+  - agent: planner
+    description: "Phân tích yêu cầu, lên kế hoạch"
+
+  - agent: designer
+    description: "Hiểu vibe/emotion, tạo design brief"
+
+  - agent: coder
+    description: "Code theo design brief"
+
+  - agent: reviewer
+    description: "Review code quality"
+
+  - agent: executor
+    tool: vercel.preview
+    description: "Deploy preview lên Vercel"
+
+  - agent: validator
+    description: "Check URL health, verify content"
+
+  - agent: learner
+    description: "Học từ kết quả, update skills"
+
+# Flow explanation:
+# 1. Planner hiểu task
+# 2. Designer hiểu vibe (romantic? cute? dark?)
+# 3. Coder code theo style đã chọn
+# 4. Reviewer check code
+# 5. Executor deploy
+# 6. Validator check URL thật (HTTP 200, content đúng)
+# 7. Learner học và ghi nhớ
+
+example_flow:
+  user_prompt: "làm web trái tim tặng người yêu"
+  
+  designer_output:
+    style: romantic
+    colors:
+      primary: "#ff6b6b"
+    animations:
+      - heartbeat
+      - floating_hearts
+    copy_tone: romantic
+  
+  result:
+    url: "https://heart-gift-flame.vercel.app"
+    status: success
+    url_healthy: true

@@ -1,0 +1,26 @@
+name: devops_automation
+description: |
+  Automation cho infrastructure và CI/CD.
+
+steps:
+  - agent: planner
+    description: "Plan infra changes"
+
+  - agent: infra_coder
+    description: "Write infra code"
+
+  - agent: reviewer
+    description: "Review infra changes"
+
+  - agent: executor
+    tool: ci.trigger
+    description: "Trigger CI pipeline"
+
+  - agent: validator
+    description: "Check CI status"
+
+  - agent: learner
+    description: "Learn from infra run"
+
+retry_on_fail: 1
+self_heal: true

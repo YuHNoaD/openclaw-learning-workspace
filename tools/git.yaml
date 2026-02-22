@@ -1,0 +1,6 @@
+name: git
+type: shell
+commands:
+  commit: "git commit -am"
+  push: "git push"
+  pr: "gh pr create --fill"

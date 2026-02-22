@@ -1,0 +1,31 @@
+name: bugfix_pr
+description: |
+  Fix bug và tạo PR tự động.
+  Designer không cần thiết cho bug fixes.
+
+steps:
+  - agent: planner
+    description: "Phân tích bug, lên plan fix"
+
+  - agent: coder
+    description: "Code fix"
+
+  - agent: reviewer
+    description: "Review code quality"
+
+  - agent: executor
+    tool: git.commit
+    description: "Commit changes"
+
+  - agent: executor
+    tool: git.pr
+    description: "Create pull request"
+
+  - agent: validator
+    description: "Verify PR created successfully"
+
+  - agent: learner
+    description: "Learn from bug fix"
+
+retry_on_fail: 1
+self_heal: true

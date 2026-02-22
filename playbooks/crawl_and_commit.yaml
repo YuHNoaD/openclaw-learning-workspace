@@ -1,0 +1,27 @@
+name: crawl_and_commit
+description: |
+  Crawl data và commit vào repo.
+
+steps:
+  - agent: planner
+    description: "Plan crawl strategy"
+
+  - agent: crawler
+    description: "Crawl data from target"
+
+  - agent: reviewer
+    description: "Review crawled data"
+
+  - agent: executor
+    tool: git.commit
+    description: "Commit changes"
+
+  - agent: executor
+    tool: git.push
+    description: "Push to remote"
+
+  - agent: learner
+    description: "Learn from crawl"
+
+retry_on_fail: 1
+self_heal: true

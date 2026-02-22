@@ -1,0 +1,29 @@
+# Common Playbook Settings
+# Apply to all playbooks
+
+defaults:
+  retry_on_fail: 1      # Auto-retry once if failed
+  self_heal: true       # Enable self-healing
+  timeout_seconds: 300  # Max time per step
+  verbose: true         # Show detailed output
+
+error_handling:
+  on_failure:
+    - log_error: true
+    - notify_user: true
+    - run_learner: true   # Always learn from failures
+    - attempt_fix: true   # Try to self-heal
+
+  on_retry:
+    - analyze_error: true
+    - propose_fix: true
+    - apply_fix: true
+    - re_run: true
+
+  max_attempts: 2
+
+notifications:
+  on_success: true
+  on_failure: true
+  channels:
+    - telegram

@@ -1,0 +1,5 @@
+name: vercel
+type: shell
+commands:
+  preview: "vercel --yes --token=$VERCEL_TOKEN"
+  prod: "vercel --prod --yes --token=$VERCEL_TOKEN"

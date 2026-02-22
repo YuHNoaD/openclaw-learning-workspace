@@ -1,0 +1,9 @@
+name: observability
+type: http
+methods:
+  metrics:
+    method: GET
+    url: "${secrets.PROM_URL}/api/v1/query"
+  logs:
+    method: GET
+    url: "${secrets.GRAFANA_URL}/api/search"

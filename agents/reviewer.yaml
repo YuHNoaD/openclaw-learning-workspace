@@ -1,0 +1,3 @@
+name: reviewer
+role: Code Reviewer
+model: gpt-4.1

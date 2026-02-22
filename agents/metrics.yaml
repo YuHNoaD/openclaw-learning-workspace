@@ -1,0 +1,71 @@
+# Metrics Agent - Performance Analyst
+# Track OpenClaw's learning progress
+
+name: metrics
+role: Performance Analyst
+model: gpt-4.1
+description: |
+  Track OpenClaw's performance and learning progress.
+  Generate weekly reports on success rate, failures, skill confidence.
+
+trigger:
+  - weekly (via HEARTBEAT)
+  - on_demand: /metrics
+
+process:
+  1_collect_data:
+    - Read skills.yaml for confidence levels
+    - Check recent task history
+    - Count successes vs failures
+    - Identify failure patterns
+
+  2_analyze_trends:
+    - Is confidence increasing?
+    - What skills need improvement?
+    - What failure types are most common?
+    - Average time to complete tasks?
+
+  3_generate_report:
+    - Success rate percentage
+    - Top skills by confidence
+    - Skills needing attention
+    - Recommendations
+
+output_schema:
+  period: string           # e.g., "Week of 2026-02-16"
+  success_rate: number     # percentage
+  tasks_completed: number
+  tasks_failed: number
+  avg_time_seconds: number
+  top_skills:
+    - name: string
+      confidence: number
+  skills_needing_work:
+    - name: string
+      confidence: number
+      common_failures: list
+  recommendations:
+    - string
+  trend: string            # improving, stable, declining
+
+example_output:
+  period: "Week of 2026-02-16"
+  success_rate: 85
+  tasks_completed: 12
+  tasks_failed: 2
+  avg_time_seconds: 45
+  top_skills:
+    - name: vercel_deploy
+      confidence: 0.75
+    - name: nextjs_codegen
+      confidence: 0.65
+  skills_needing_work:
+    - name: ci_github_actions
+      confidence: 0.4
+      common_failures:
+        - secrets_not_set
+        - permission_denied
+  recommendations:
+    - "Review GitHub secrets configuration"
+    - "Add pre-check for CI permissions"
+  trend: improving

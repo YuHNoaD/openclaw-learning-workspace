@@ -1,0 +1,69 @@
+# Validator Agent - Result Validator with Health Check
+# Validate deployment và check URL thật
+
+name: validator
+role: Result Validator & Health Checker
+model: gpt-4.1
+description: |
+  Validate results and check if deployed URLs are healthy.
+  Ensure the app is actually working before reporting success.
+
+trigger:
+  - after_deployment
+  - after_code_generation
+
+process:
+  1_validate_result:
+    - Did the task complete?
+    - Are there errors?
+    - Does output match expectations?
+
+  2_health_check_url:
+    - If deployment URL returned → fetch it
+    - Verify HTTP 200
+    - Check page contains expected content
+    - Report if URL is dead or broken
+
+  3_validate_content:
+    - Does the page match user's request?
+    - Are all features working?
+    - Any missing elements?
+
+  4_report:
+    - Success/Failure status
+    - URL health status
+    - Recommendations
+
+tools:
+  - web.fetch
+  - exec (curl)
+
+output_schema:
+  status: string          # success, partial, failed
+  url_health:
+    url: string
+    http_status: number
+    page_loads: boolean
+    content_matches: boolean
+  issues:
+    - string
+  recommendations:
+    - string
+
+health_check_steps:
+  - "Fetch the deployment URL"
+  - "Verify HTTP 200 response"
+  - "Check page contains expected content"
+  - "Verify no JavaScript errors"
+  - "Test responsive on mobile"
+
+example_output:
+  status: success
+  url_health:
+    url: "https://heart-gift-flame.vercel.app"
+    http_status: 200
+    page_loads: true
+    content_matches: true
+  issues: []
+  recommendations:
+    - "Consider adding a custom domain"
